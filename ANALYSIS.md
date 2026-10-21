@@ -7,6 +7,10 @@ Both functions keeps the names and turns the raw scores given to them into adjus
 Ada   Grace   Linus   Barbara
 16      0       20       8
 
-`clean_scores_scalar()` ...
+`clean_scores_scalar()` handles one score per pass. Grace's score would just be 0 since it's not available: on the 2nd pass, after Ada and before Linus, the 1st branch (if) catches it and writes 0 to out. The if was for NA, the elif for numbers whose double go past 20, and the else for numbers whose double are 20 or less.
 
-Keeping vector evaluation implementation in an R program is faster compared to the scalar evaluation, as it acts on the scores all at once, unlike in scalar that loops through the number of items one-by-one.
+At pass 2, Linus and Barbara haven't gotten their scores doubled yet (including those that just get set to 20). The vector version doubles everything first, including the NA, which remains NA until the next line sets it to 0.
+
+If `scores*2` became `scores * c(2, 1)`, the multipliers would recycle as 2, 1, 2, 1 and the result would be 16 0 20 4: Barbara doesn't get 8 anymore.
+
+Keeping vector evaluation implementation in an R program is faster compared to the scalar evaluation, as it acts on the scores all at once, unlike in scalar that loops through the number of items one-by-one. The tradeoff is that the scalar version is cleaner and easier to trace.
